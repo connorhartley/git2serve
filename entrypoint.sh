@@ -11,11 +11,19 @@ fi
 
 if [ -d $WEBSITE_ID ]; then
   cd $WEBSITE_ID
-  git reset --hard origin/master > /dev/null
-  git pull > /dev/null
+  if [ -n "$GIT_SSH_FILE" ]; then
+    ssh-agent bash -c "ssh-add $GIT_SSH_FILE; git reset --hard origin/master > /dev/null; git pull > /dev/null"
+  else
+    git reset --hard origin/master > /dev/null
+    git pull > /dev/null
+  fi
 else
   cd
-  git clone $WEBSITE_REPO $WEBSITE_ID > /dev/null
+  if [ -n "$GIT_SSH_FILE" ]; then
+    ssh-agent bash -c "ssh-add $GIT_SSH_FILE; git clone $WEBSITE_REPO $WEBSITE_ID > /dev/null"
+  else
+    git clone $WEBSITE_REPO $WEBSITE_ID > /dev/null
+  fi
 fi
 echo "Cloned ($WEBSITE_REPO) into ($WEBSITE_ID)"
 

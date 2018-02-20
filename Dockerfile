@@ -1,5 +1,5 @@
 ############################
-# Version 0.2.1
+# Version v0.2.2.alpha
 
 # Base Alpine Image
 FROM gliderlabs/alpine:edge

@@ -9,6 +9,10 @@ A container for deploying static websites from git using h2o shipped with NodeJS
 
 Simple run: `docker run -p 80:80 -e WEBSITE_ID=foobar -e WEBSITE_REPO=https://github.com/foo/bar.git connorhartley/git2serve`
 
+You can mount a volume that uses the hosts ssh key for git to clone / pull from like so.
+
+Private repository run: `docker run -p 80:80 -e WEBSITE_ID=foobar -e WEBSITE_REPO=https://github.com/foo/bar.git -e GIT_SSH_FILE=/key -v ~/.ssh/id_rsa:/key:ro connorhartley/git2serve`
+
 As port 80 is already exposed you can use it in conjunction with [nginx-proxy](https://github.com/jwilder/nginx-proxy) like so.
 
 Proxied run: `docker run -e VIRTUAL_HOST=foobar.com -e WEBSITE_ID=foobar -e WEBSITE_REPO=https://github.com/foo/bar.git connorhartley/git2serve`
