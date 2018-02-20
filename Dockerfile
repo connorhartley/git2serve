@@ -7,6 +7,11 @@ FROM gliderlabs/alpine:3.7
 # Maintainer Meta
 MAINTAINER Connor Hartley <vectrixu@gmail.com>
 
+# H2O Variables
+ENV H2O_ID       h2o
+ENV H2O_URL      https://github.com/h2o/h2o.git
+ENV H2O_VERSION  tags/v2.2.4
+
 # Install
 RUN apk update \
     # Dependencies
@@ -33,8 +38,10 @@ RUN apk update \
                                   ruby-dev \
                                   zlib-dev \
     # Clone h2o, build it, then remove the source.
-    && git clone ${H2O_EXTRA_ARGS} https://github.com/h2o/h2o --recursive \
-    && cmake -DWITH_BUNDLED_SSL=on -DWITH_MRUBY=on \
+    && git clone ${H2O_URL} ${H2O_ID} \
+    && cd ${H2O_ID} \
+    && git checkout ${H2O_VERSION} \
+    && cmake -DWITH_BUNDLED_SSL=on -DWITH_MRUBY=on . \
     && make install \
     && cd .. \
     && rm -rf h2o \
