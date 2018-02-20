@@ -2,7 +2,7 @@
 # Version 0.2.0
 
 # Base Alpine Image
-FROM gliderlabs/alpine:3.7
+FROM gliderlabs/alpine:edge
 
 # Maintainer Meta
 MAINTAINER Connor Hartley <vectrixu@gmail.com>
