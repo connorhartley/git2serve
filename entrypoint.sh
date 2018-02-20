@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -z ${WEBSITE_ID+x} ] || [ -z ${WEBSITE_REPO+x} ]; then
+  echo "Cannot run script if 'WEBSITE_ID' and 'WEBSITE_REPO' are not specified."
+  exit 1
+fi
+
 ##############################
 # Clone the repository.
 ##############################
