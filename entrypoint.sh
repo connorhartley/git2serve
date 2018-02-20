@@ -48,4 +48,4 @@ echo "Installed ($WEBSITE_ID)"
 
 echo "Serving ($WEBSITE_ID)"
 
-/h2o/h2o -c /etc/h2o/h2o.conf
+h2o --conf /etc/h2o/h2o.conf
