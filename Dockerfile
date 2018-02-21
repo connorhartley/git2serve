@@ -1,5 +1,5 @@
 ############################
-# Version v0.2.3.alpha
+# Version v1.0.0
 
 # Base Alpine Image
 FROM gliderlabs/alpine:edge
@@ -11,9 +11,6 @@ MAINTAINER Connor Hartley <vectrixu@gmail.com>
 ENV H2O_ID       h2o
 ENV H2O_URL      https://github.com/h2o/h2o.git
 ENV H2O_VERSION  tags/v2.2.4
-
-# Node Variables
-ENV NODE_VERSION 8.9.4
 
 RUN apk add --no-cache bash \
                        sudo
