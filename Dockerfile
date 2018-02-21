@@ -36,6 +36,7 @@ RUN sudo apk update \
                           curl \
                           git \
                           libstdc++ \
+                          nodejs-npm \
                           openssh \
                           openssl \
                           perl \
@@ -51,20 +52,6 @@ RUN sudo apk update \
                                   ruby \
                                   ruby-dev \
                                   zlib-dev \
-    # Install nvm and node.
-    && cd \
-    && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash \
-    && sudo chown root:root /home/container/.nvm \
-    && echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc \
-    && echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> $HOME/.bashrc \
-    && echo '[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> $HOME/.bashrc \
-    # && bash -c 'source $HOME/.nvm/nvm.sh            && \
-    #             nvm install node                    && \
-    #             npm install -g doctoc urchin        && \
-    #             npm install --prefix "$HOME/.nvm/"' \
-    # Test that node / npm installed.
-    && node -v \
-    && npm -v \
     # Clone h2o, build it, then remove the source.
     && git clone ${H2O_URL} ${H2O_ID} \
     && cd ${H2O_ID} \
