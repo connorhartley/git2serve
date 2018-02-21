@@ -59,9 +59,9 @@ RUN sudo apk update \
     && cmake -DWITH_BUNDLED_SSL=on -DWITH_MRUBY=on . \
     && sudo make install \
     && cd .. \
-    && rm -rf h2o \
+    && sudo rm -rf h2o \
     && sudo apk del dev-dependencies \
-    && rm -rf /var/cache/apk/* \
+    && sudo rm -rf /var/cache/apk/* \
     # Test that h2o installed.
     && h2o -v
 
