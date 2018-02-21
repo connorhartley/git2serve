@@ -1,5 +1,5 @@
 ############################
-# Version v0.2.2.alpha
+# Version v0.2.3.alpha
 
 # Base Alpine Image
 FROM gliderlabs/alpine:edge
@@ -12,6 +12,9 @@ ENV H2O_ID       h2o
 ENV H2O_URL      https://github.com/h2o/h2o.git
 ENV H2O_VERSION  tags/v2.2.4
 
+# Node Variables
+ENV NODE_VERSION 8.9.4
+
 # Install
 RUN apk update \
     # Dependencies
@@ -20,7 +23,6 @@ RUN apk update \
                           curl \
                           git \
                           libstdc++ \
-                          nodejs \
                           openssh \
                           openssl \
                           perl \
@@ -37,6 +39,15 @@ RUN apk update \
                                   ruby \
                                   ruby-dev \
                                   zlib-dev \
+    # Install nvm and node.
+    && cd \
+    && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash \
+    && . ~/.nvm/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    # Test that node / npm installed.
+    && node -v \
+    && npm -v \
     # Clone h2o, build it, then remove the source.
     && git clone ${H2O_URL} ${H2O_ID} \
     && cd ${H2O_ID} \
