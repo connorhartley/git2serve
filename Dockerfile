@@ -56,7 +56,7 @@ RUN sudo apk update \
     # Install nvm and node.
     && cd \
     && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash \
-    && sudo . ~/.nvm/nvm.sh \
+    && sh ~/.nvm/nvm.sh \
     && sudo nvm install $NODE_VERSION \
     && sudo nvm alias default $NODE_VERSION \
     # Test that node / npm installed.
