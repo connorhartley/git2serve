@@ -62,4 +62,4 @@ echo "Installed ($WEBSITE_ID)"
 
 echo "Serving ($WEBSITE_ID)"
 
-h2o --conf /etc/h2o/h2o.conf
+sudo h2o --conf /etc/h2o/h2o.conf
