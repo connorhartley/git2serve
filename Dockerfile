@@ -55,7 +55,7 @@ RUN sudo apk update \
                                   zlib-dev \
     # Install nvm and node.
     && cd \
-    && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash \
+    && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.7/install.sh | bash \
     && sh ~/.nvm/nvm.sh \
     && sudo nvm install $NODE_VERSION \
     && sudo nvm alias default $NODE_VERSION \
