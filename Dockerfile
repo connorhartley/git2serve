@@ -32,9 +32,9 @@ ENV HOME /home/container
 WORKDIR /home/container
 
 # Install
-RUN apk update \
+RUN sudo apk update \
     # Dependencies
-    && apk add --no-cache build-base \
+    && sudo apk add --no-cache build-base \
                           curl \
                           git \
                           libstdc++ \
@@ -45,7 +45,7 @@ RUN apk update \
                           unzip \
                           zip \
     # Dev Dependencies
-    && apk --update add --virtual dev-dependencies \
+    && sudo apk --update add --virtual dev-dependencies \
                                   bison \
                                   ca-certificates \
                                   cmake \
@@ -70,7 +70,7 @@ RUN apk update \
     && make install \
     && cd .. \
     && rm -rf h2o \
-    && apk del dev-dependencies \
+    && sudo apk del dev-dependencies \
     && rm -rf /var/cache/apk/* \
     # Test that h2o installed.
     && h2o -v
