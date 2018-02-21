@@ -21,9 +21,7 @@ RUN apk add --no-cache bash \
 # Setup account container
 RUN adduser -u 1000 -D -h /home/container container \
     && echo "ALL            ALL = (ALL) NOPASSWD: ALL" > /etc/sudoers \
-    && chown root:root /usr/bin \
-    && chown root:root /home/container/.nvm \
-    && chmod u+s /usr/bin/sudo
+    && chown root:root /home/container/.nvm
 
 # User to run the dockerfile as
 USER container
@@ -57,13 +55,13 @@ RUN sudo apk update \
     # Install nvm and node.
     && cd \
     && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.7/install.sh | bash \
-    && echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc
-    && echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> $HOME/.bashrc
-    && echo '[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> $HOME/.bashrc
+    && echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc \
+    && echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> $HOME/.bashrc \
+    && echo '[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> $HOME/.bashrc \
     && bash -c 'source $HOME/.nvm/nvm.sh            && \
                 nvm install node                    && \
                 npm install -g doctoc urchin        && \
-                npm install --prefix "$HOME/.nvm/"'
+                npm install --prefix "$HOME/.nvm/"' \
     # Test that node / npm installed.
     && node -v \
     && npm -v \
