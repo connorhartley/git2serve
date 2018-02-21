@@ -50,6 +50,7 @@ npm start
 
 # Move custom h2o configuration (https://github.com/h2o/h2o/wiki#configuration-examples)
 if [ -d ".h2o/" ]; then
+  sudo mkdir /etc/h2o
   sudo cp .h2o/h2o.conf /etc/h2o/h2o.conf
 fi
 
