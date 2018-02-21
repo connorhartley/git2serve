@@ -56,8 +56,8 @@ RUN sudo apk update \
     && git clone ${H2O_URL} ${H2O_ID} \
     && cd ${H2O_ID} \
     && git checkout ${H2O_VERSION} \
-    && sudo cmake -DWITH_BUNDLED_SSL=on -DWITH_MRUBY=on . \
-    && make install \
+    && cmake -DWITH_BUNDLED_SSL=on -DWITH_MRUBY=on . \
+    && sudo make install \
     && cd .. \
     && rm -rf h2o \
     && sudo apk del dev-dependencies \
