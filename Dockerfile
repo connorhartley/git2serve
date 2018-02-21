@@ -15,6 +15,19 @@ ENV H2O_VERSION  tags/v2.2.4
 # Node Variables
 ENV NODE_VERSION 8.9.4
 
+# Setup account container
+RUN adduser -u 1000 -D -h /home/container container \
+    && echo "ALL            ALL = (ALL) NOPASSWD: ALL" > /etc/sudoers \
+    && chown root:root /usr/bin \
+    && chmod u+s /usr/bin/sudo
+
+# User to run the dockerfile as
+USER container
+ENV USER container
+ENV HOME /home/container
+
+WORKDIR /home/container
+
 # Install
 RUN apk update \
     # Dependencies
@@ -60,19 +73,6 @@ RUN apk update \
     && rm -rf /var/cache/apk/* \
     # Test that h2o installed.
     && h2o -v
-
-# Setup account container
-RUN adduser -u 1000 -D -h /home/container container \
-    && echo "ALL            ALL = (ALL) NOPASSWD: ALL" > /etc/sudoers \
-    && chown root:root /usr/bin \
-    && chmod u+s /usr/bin/sudo
-
-# User to run the dockerfile as
-USER container
-ENV USER container
-ENV HOME /home/container
-
-WORKDIR /home/container
 
 # Expose the HTTP port
 EXPOSE 80
