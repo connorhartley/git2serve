@@ -15,6 +15,9 @@ ENV H2O_VERSION  tags/v2.2.4
 # Node Variables
 ENV NODE_VERSION 8.9.4
 
+RUN apk add --no-cache bash \
+                       sudo
+
 # Setup account container
 RUN adduser -u 1000 -D -h /home/container container \
     && echo "ALL            ALL = (ALL) NOPASSWD: ALL" > /etc/sudoers \
@@ -31,15 +34,13 @@ WORKDIR /home/container
 # Install
 RUN apk update \
     # Dependencies
-    && apk add --no-cache bash \
-                          build-base \
+    && apk add --no-cache build-base \
                           curl \
                           git \
                           libstdc++ \
                           openssh \
                           openssl \
                           perl \
-                          sudo \
                           tar \
                           unzip \
                           zip \
