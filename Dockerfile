@@ -1,5 +1,5 @@
 ############################
-# Version v2.0.0
+# Version v2.0.1
 
 # Base Alpine Image
 FROM gliderlabs/alpine:edge
@@ -15,14 +15,15 @@ ENV H2O_VERSION  tags/v2.2.4
 # Project Variables
 ENV PROJECT_ID             launchpad
 ENV PROJECT_VERSION        v1
-ENV PROJECT_PATH           static/
-ENV PROJECT_CONFIG         static/.h2o/h2o.conf
-ENV PROJECT_TEMP           temp/
+ENV PROJECT_PATH           static
+ENV PROJECT_CONFIG         config
+ENV PROJECT_TEMP           temp
 
 # Github Variables
 ENV GITHUB_PROJECT  connorhartley/launchpad
 ENV GITHUB_VERSION  tags/v1.0.0
 ENV GITHUB_FILE     launchpad-1.0.0-dist.tar.gz
+ENV GITHUB_CONF     h2o.conf
 ENV GITHUB_TOKEN    temporary
 
 RUN apk add --no-cache bash \

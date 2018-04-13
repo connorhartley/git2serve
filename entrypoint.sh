@@ -30,12 +30,18 @@ fi
 mkdir -p $PROJECT_PATH
 mkdir -p $PROJECT_TEMP
 
+if [ ! -d "$PROJECT_CONFIG" ]; then
+  mkdir -p $PROJECT_CONFIG
+fi
+
 cd $PROJECT_TEMP
 
 ASSET_RESPONSE=$(curl -sH "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$GITHUB_PROJECT/releases/$GITHUB_VERSION)
-ASSET_ID=$(echo "$ASSET_RESPONSE" | grep -C3 "name.:.\+$GITHUB_FILE" | grep -w id | tr : = | tr -cd [:digit:])
+ASSET_DIST_ID=$(echo "$ASSET_RESPONSE" | grep -C3 "name.:.\+$GITHUB_FILE" | grep -w id | tr : = | tr -cd [:digit:])
+ASSET_CONF_ID=$(echo "$ASSET_RESPONSE" | grep -C3 "name.:.\+$GITHUB_CONF" | grep -w id | tr : = | tr -cd [:digit:])
 
-curl -LJO -H 'Accept: application/octet-stream' https://api.github.com/repos/$GITHUB_PROJECT/releases/assets/$ASSET_ID?access_token=$GITHUB_TOKEN
+curl -LJO -H 'Accept: application/octet-stream' https://api.github.com/repos/$GITHUB_PROJECT/releases/assets/$ASSET_DIST_ID?access_token=$GITHUB_TOKEN
+curl -LJO -H 'Accept: application/octet-stream' https://api.github.com/repos/$GITHUB_PROJECT/releases/assets/$ASSET_CONF_ID?access_token=$GITHUB_TOKEN
 
 ##################################
 # Unpack archive.
@@ -49,6 +55,10 @@ if [ -f $PROJECT_BASE/$PROJECT_TEMP/$GITHUB_FILE ]; then
   tar xf "$PROJECT_BASE/$PROJECT_TEMP/$GITHUB_FILE" -C "$PROJECT_BASE/$PROJECT_PATH"
 fi
 
+if [ -f $PROJECT_BASE/$PROJECT_TEMP/$GITHUB_CONF ]; then
+  mv "$PROJECT_BASE/$PROJECT_TEMP/$GITHUB_CONF" "$PROJECT_BASE/$PROJECT_CONFIG"
+fi
+
 ##################################
 # Serve the project.
 ##################################
@@ -57,4 +67,4 @@ echo "g2s : Serving ($PROJECT_ID) ($PROJECT_VERSION)"
 
 cd ~
 
-sudo h2o --conf "$PROJECT_BASE/$PROJECT_CONFIG"
+sudo h2o --conf "$PROJECT_BASE/$PROJECT_CONFIG/$GITHUB_CONF"
