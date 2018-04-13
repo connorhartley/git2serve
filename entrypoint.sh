@@ -44,7 +44,7 @@ echo "g2s : Unpack ($GITHUB_FILE)"
 
 cd ~
 
-if [ -n $TARGET_PATH ]; then
+if [ -f $PROJECT_BASE/$PROJECT_TEMP/$GITHUB_FILE ]; then
   tar xf $PROJECT_BASE/$PROJECT_TEMP/$GITHUB_FILE -C $PROJECT_BASE/$PROJECT_PATH
 fi
 
