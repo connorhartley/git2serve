@@ -57,4 +57,4 @@ echo "g2s : Serving ($PROJECT_ID) ($PROJECT_VERSION)"
 
 cd ~
 
-sudo h2o --conf "$PROJECT_BASE/$PROJECT_CONFIG" &
+sudo h2o --conf "$PROJECT_BASE/$PROJECT_CONFIG"
