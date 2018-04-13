@@ -4,7 +4,7 @@
 # Download archived distribution.
 ##################################
 
-PROJECT_BASE="/$PROJECT_ID/$PROJECT_VERSION"
+PROJECT_BASE="$PROJECT_ID/$PROJECT_VERSION"
 
 echo "g2s : Download ($GITHUB_PROJECT) ($GITHUB_VERSION)"
 
@@ -33,7 +33,7 @@ mkdir -p $PROJECT_TEMP
 cd $PROJECT_TEMP
 
 GITHUB_ASSET_ID=$(curl -sSL https://api.github.com/repos/${GITHUB_PROJECT}/releases/${GITHUB_VERSION}?access_token=${GITHUB_TOKEN} | grep -B 1 "\"name\": \"${GITHUB_FILE}\"" | head -1 | sed 's/.*"id": \(.*\),/\1/')
-curl -L "https://api.github.com/repos/${GITHUB_PROJECT}/releases/assets/${GITHUB_ASSET_ID}?access_token=${GITHUB_TOKEN} -o ${GITHUB_FILE} -H 'Accept: application/octet-stream'"
+curl -L https://api.github.com/repos/${GITHUB_PROJECT}/releases/assets/${GITHUB_ASSET_ID}?access_token=${GITHUB_TOKEN} -o ${GITHUB_FILE} -H 'Accept: application/octet-stream'
 
 
 ##################################
