@@ -1,5 +1,5 @@
 ############################
-# Version v1.0.0
+# Version v2.0.0
 
 # Base Alpine Image
 FROM gliderlabs/alpine:edge
@@ -12,7 +12,22 @@ ENV H2O_ID       h2o
 ENV H2O_URL      https://github.com/h2o/h2o.git
 ENV H2O_VERSION  tags/v2.2.4
 
+# Project Variables
+ENV PROJECT_ID             launchpad
+ENV PROJECT_VERSION        v1
+ENV PROJECT_PATH           static/
+ENV PROJECT_CONFIG         static/.h2o/h2o.conf
+ENV PROJECT_TEMP           temp/
+
+# Github Variables
+ENV GITHUB_PROJECT  connorhartley/launchpad
+ENV GITHUB_VERSION  tags/v1.0.0
+ENV GITHUB_FILE     launchpad-1.0.0-dist.tar.gz
+ENV GITHUB_TOKEN    temporary
+
 RUN apk add --no-cache bash \
+                       curl \
+                       tar \
                        sudo
 
 # Setup account container
@@ -30,14 +45,11 @@ WORKDIR /home/container
 RUN sudo apk update \
     # Dependencies
     && sudo apk add --no-cache build-base \
-                          curl \
                           git \
                           libstdc++ \
-                          nodejs-npm \
                           openssh \
                           openssl \
                           perl \
-                          tar \
                           unzip \
                           zip \
     # Dev Dependencies
