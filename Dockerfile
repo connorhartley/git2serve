@@ -15,9 +15,6 @@ ENV H2O_VERSION  tags/v2.2.4
 # Project Variables
 ENV PROJECT_ID             launchpad
 ENV PROJECT_VERSION        v1
-ENV PROJECT_PATH           static
-ENV PROJECT_CONFIG         config
-ENV PROJECT_TEMP           temp
 
 # Github Variables
 ENV GITHUB_PROJECT  connorhartley/launchpad

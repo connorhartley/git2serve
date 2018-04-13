@@ -19,19 +19,6 @@ else
   cd $PROJECT_BASE
 fi
 
-if [ -d $PROJECT_PATH ]; then
-  rm -rf $PROJECT_PATH
-fi
-
-if [ -d $PROJECT_TEMP ]; then
-  rm -rf $PROJECT_TEMP
-fi
-
-mkdir -p $PROJECT_PATH
-mkdir -p $PROJECT_TEMP
-
-cd $PROJECT_TEMP
-
 ASSET_RESPONSE=$(curl -sH "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$GITHUB_PROJECT/releases/$GITHUB_VERSION)
 ASSET_DIST_ID=$(echo "$ASSET_RESPONSE" | grep -C3 "name.:.\+$GITHUB_FILE" | grep -w id | tr : = | tr -cd [:digit:])
 ASSET_CONF_ID=$(echo "$ASSET_RESPONSE" | grep -C3 "name.:.\+$GITHUB_CONF" | grep -w id | tr : = | tr -cd [:digit:])
@@ -40,20 +27,23 @@ curl -LJO -H 'Accept: application/octet-stream' https://api.github.com/repos/$GI
 curl -LJO -H 'Accept: application/octet-stream' https://api.github.com/repos/$GITHUB_PROJECT/releases/assets/$ASSET_CONF_ID?access_token=$GITHUB_TOKEN
 
 ##################################
-# Unpack archive.
+# Unpack archive and move files.
 ##################################
 
 echo "g2s : Unpack ($GITHUB_FILE)"
 
 cd ~
 
-if [ -f $PROJECT_BASE/$PROJECT_TEMP/$GITHUB_FILE ]; then
-  tar xf "$PROJECT_BASE/$PROJECT_TEMP/$GITHUB_FILE" -C "$PROJECT_BASE/$PROJECT_PATH"
+if [ -f $PROJECT_BASE/$GITHUB_FILE ]; then
+  sudo rm -rf /var/www/
+  sudo mkdir -p /var/www/
+  sudo tar -zxf "$PROJECT_BASE/$GITHUB_FILE" -C /var/www/
 fi
 
-if [ -f $PROJECT_BASE/$PROJECT_TEMP/$GITHUB_CONF ]; then
-  sudo mkdir /etc/h2o
-  sudo cp "$PROJECT_BASE/$PROJECT_TEMP/$GITHUB_CONF" /etc/h2o/$GITHUB_CONF
+if [ -f $PROJECT_BASE/$GITHUB_CONF ]; then
+  sudo rm -rf /etc/h2o/
+  sudo mkdir -p /etc/h2o/
+  sudo cp "$PROJECT_BASE/$GITHUB_CONF" /etc/h2o/$GITHUB_CONF
 fi
 
 ##################################
@@ -63,6 +53,5 @@ fi
 echo "g2s : Serving ($PROJECT_ID) ($PROJECT_VERSION)"
 
 cd ~
-cd $PROJECT_BASE/$PROJECT_PATH
 
 sudo h2o --conf /etc/h2o/$GITHUB_CONF
