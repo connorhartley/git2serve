@@ -33,7 +33,7 @@ mkdir -p $PROJECT_TEMP
 cd $PROJECT_TEMP
 
 GITHUB_ASSET_ID=$(curl -sSL "https://api.github.com/repos/${GITHUB_PROJECT}/releases/${GITHUB_VERSION}?access_token=${GITHUB_TOKEN}" | grep -B 1 "\"name\": \"${GITHUB_FILE}\"" | head -1 | sed 's/.*"id": \(.*\),/\1/')
-curl -vLJ -H 'Accept: application/octet-stream' "https://api.github.com/repos/${GITHUB_PROJECT}/releases/assets/${GITHUB_ASSET_ID}?access_token=${GITHUB_TOKEN}" -o "${GITHUB_FILE}"
+curl -vLJO -H 'Accept: application/octet-stream' "https://api.github.com/repos/${GITHUB_PROJECT}/releases/assets/${GITHUB_ASSET_ID}?access_token=${GITHUB_TOKEN}" -o "${GITHUB_FILE}"
 
 
 ##################################
