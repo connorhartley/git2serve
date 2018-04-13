@@ -1,65 +1,60 @@
 #!/bin/bash
 
-if [ -z ${WEBSITE_ID+x} ] || [ -z ${WEBSITE_REPO+x} ]; then
-  echo "Cannot run script if 'WEBSITE_ID' and 'WEBSITE_REPO' are not specified."
-  exit 1
-fi
+##################################
+# Download archived distribution.
+##################################
 
-##############################
-# Clone the repository.
-##############################
+PROJECT_BASE="$PROJECT_ID/$PROJECT_VERSION"
 
-if [ -d $WEBSITE_ID ]; then
-  cd $WEBSITE_ID
-  if [ -n "$GIT_SSH_FILE" ]; then
-    ssh-agent bash -c "ssh-add $GIT_SSH_FILE; git reset --hard origin/master > /dev/null; git pull > /dev/null"
-  else
-    git reset --hard origin/master > /dev/null
-    git pull > /dev/null
-  fi
+echo "g2s : Download ($GITHUB_PROJECT) ($GITHUB_VERSION)"
+
+# Make the project directory if it doesn't exist already.
+
+cd ~
+
+if [ -d $PROJECT_BASE ]; then
+  cd $PROJECT_BASE
 else
-  cd
-  if [ -n "$GIT_SSH_FILE" ]; then
-    ssh-agent bash -c "ssh-add $GIT_SSH_FILE; git clone $WEBSITE_REPO $WEBSITE_ID > /dev/null"
-  else
-    git clone $WEBSITE_REPO $WEBSITE_ID > /dev/null
-  fi
-fi
-echo "Cloned ($WEBSITE_REPO) into ($WEBSITE_ID)"
-
-##############################
-# Install the project.
-##############################
-
-# Go to the website directory
-cd $WEBSITE_ID
-
-# Support pac production deployment (https://www.npmjs.com/package/pac)
-if [ -d ".modules/" ]; then
-  mkdir -p node_modules > /dev/null
-  for f in .modules/*.tgz; do tar -zxf "$f" -C node_modules/ > /dev/null; done
-  npm rebuild > /dev/null
-else
-  npm install > /dev/null
+  mkdir -p $PROJECT_BASE
+  cd $PROJECT_BASE
 fi
 
-# The start script. The start script can:
-# - Build the application.
-# - Move files to appropriate places.
-npm start
-
-# Move custom h2o configuration (https://github.com/h2o/h2o/wiki#configuration-examples)
-if [ -d ".h2o/" ]; then
-  sudo mkdir /etc/h2o
-  sudo cp .h2o/h2o.conf /etc/h2o/h2o.conf
+if [ -d $PROJECT_PATH ]; then
+  rm -rf $PROJECT_PATH
 fi
 
-echo "Installed ($WEBSITE_ID)"
+if [ -d $PROJECT_TEMP ]; then
+  rm -rf $PROJECT_TEMP
+fi
 
-##############################
+mkdir -p $PROJECT_PATH
+mkdir -p $PROJECT_TEMP
+
+cd $PROJECT_TEMP
+
+ASSET_RESPONSE=$(curl -sH "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$GITHUB_PROJECT/releases/$GITHUB_VERSION)
+ASSET_ID=$(echo "$ASSET_RESPONSE" | grep -C3 "name.:.\+$GITHUB_FILE" | grep -w id | tr : = | tr -cd [:digit:])
+
+curl -LJO -H 'Accept: application/octet-stream' https://api.github.com/repos/$GITHUB_PROJECT/releases/assets/$ASSET_ID?access_token=$GITHUB_TOKEN
+
+##################################
+# Unpack archive.
+##################################
+
+echo "g2s : Unpack ($GITHUB_FILE)"
+
+cd ~
+
+if [ -f $PROJECT_BASE/$PROJECT_TEMP/$GITHUB_FILE ]; then
+  tar xf "$PROJECT_BASE/$PROJECT_TEMP/$GITHUB_FILE" -C "$PROJECT_BASE/$PROJECT_PATH"
+fi
+
+##################################
 # Serve the project.
-##############################
+##################################
 
-echo "Serving ($WEBSITE_ID)"
+echo "g2s : Serving ($PROJECT_ID) ($PROJECT_VERSION)"
 
-sudo h2o --conf /etc/h2o/h2o.conf
+cd ~
+
+sudo h2o --conf "$PROJECT_BASE/$PROJECT_CONFIG"
