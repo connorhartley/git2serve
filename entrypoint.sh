@@ -30,10 +30,6 @@ fi
 mkdir -p $PROJECT_PATH
 mkdir -p $PROJECT_TEMP
 
-if [ ! -d "$PROJECT_CONFIG" ]; then
-  mkdir -p $PROJECT_CONFIG
-fi
-
 cd $PROJECT_TEMP
 
 ASSET_RESPONSE=$(curl -sH "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$GITHUB_PROJECT/releases/$GITHUB_VERSION)
@@ -56,7 +52,8 @@ if [ -f $PROJECT_BASE/$PROJECT_TEMP/$GITHUB_FILE ]; then
 fi
 
 if [ -f $PROJECT_BASE/$PROJECT_TEMP/$GITHUB_CONF ]; then
-  mv "$PROJECT_BASE/$PROJECT_TEMP/$GITHUB_CONF" "$PROJECT_BASE/$PROJECT_CONFIG"
+  sudo mkdir /etc/h2o
+  sudo cp "$PROJECT_BASE/$PROJECT_TEMP/$GITHUB_CONF" /etc/h2o/$GITHUB_CONF
 fi
 
 ##################################
@@ -66,5 +63,6 @@ fi
 echo "g2s : Serving ($PROJECT_ID) ($PROJECT_VERSION)"
 
 cd ~
+cd $PROJECT_BASE/$PROJECT_PATH
 
-sudo h2o --conf "$PROJECT_BASE/$PROJECT_CONFIG/$GITHUB_CONF"
+sudo h2o --conf /etc/h2o/$GITHUB_CONF
